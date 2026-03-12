@@ -74,6 +74,43 @@
             border: 3px solid #f0f0f0;
         }
 
+        /* Avatar Frame Overlay Classes */
+        .avatar-wrapper {
+            position: relative;
+            width: 140px;
+            /* Frame width */
+            height: 140px;
+            /* Frame height */
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .editor-avatar-base {
+            width: 80px;
+            /* Scaled down inner avatar */
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            position: relative;
+            z-index: 1;
+            /* Below the frame */
+        }
+
+        .editor-avatar-frame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            pointer-events: none;
+            /* Let clicks pass through if needed */
+            z-index: 2;
+            /* Above the avatar */
+        }
+
         .editor-name {
             font-size: 1.25rem;
             font-weight: 700;
@@ -152,8 +189,13 @@
                 </div>
 
                 <div class="editor-card">
-                    <img src="https://i2.hdslb.com/bfs/face/b49d63f25c78a0cadd30198e3b3c3c73bbbd5d43.jpg" alt="头像"
-                        class="editor-avatar">
+                    <div class="avatar-wrapper">
+                        <!-- 调整了老王的头像来源并适配内边距 -->
+                        <img src="https://i2.hdslb.com/bfs/face/b49d63f25c78a0cadd30198e3b3c3c73bbbd5d43.jpg" alt="头像"
+                            class="editor-avatar-base">
+                        <!-- 覆盖的头像框 -->
+                        <img src="img/Coat_of_arms_of_1.png" alt="头像框" class="editor-avatar-frame">
+                    </div>
                     <div class="editor-name">老王 (Wang, The Old)</div>
                     <div class="editor-title">联合主编 / 审核委员会主席</div>
                     <div class="editor-field">极端抽象文本解构 / 流汗黄豆语义学</div>

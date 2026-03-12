@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>期刊专栏与合集 (Collections) | VSTOR</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/academic-minimal.css">
+    <style>
+        .collections-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .collections-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .collections-header h1 {
+            font-family: var(--font-serif);
+            font-size: 2.5rem;
+            color: #1a237e;
+        }
+
+        .collection-list {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .collection-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .collection-img {
+            width: 300px;
+            background: linear-gradient(135deg, #1a237e, #4fc3f7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 4rem;
+            font-family: var(--font-serif);
+            flex-shrink: 0;
+        }
+
+        .collection-content {
+            padding: 30px;
+            flex: 1;
+        }
+
+        .collection-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .collection-desc {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .collection-papers {
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        .collection-papers h4 {
+            margin-bottom: 15px;
+            font-size: 1rem;
+            color: #1a237e;
+        }
+
+        .paper-link {
+            display: block;
+            padding: 10px 15px;
+            background: #f9f9f9;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            color: #333;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .paper-link:hover {
+            background: #e8eaf6;
+            color: #1a237e;
+        }
+
+        .paper-link span {
+            color: #888;
+            font-size: 0.85rem;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="v-navbar">
+        <div class="v-nav-container">
+            <div class="v-brand"><a href="vup-archive.html">VSTOR</a></div>
+            <ul class="v-nav-links">
+                <li><a href="vup-archive.html">探索文献</a></li>
+                <li><a href="vstor-search.html">高级检索</a></li>
+                <li><a href="vstor-collections.html" class="active">期刊专栏</a></li>
+                <li><a href="vstor-metrics.html">学术指标</a></li>
+                <li><a href="vstor-editorial.html">编委会</a></li>
+                <li><a href="vstor-guidelines.html">作者须知</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="collections-container">
+        <div class="collections-header">
+            <h1>VSTOR 期刊专栏 (Special Issues)</h1>
+            <p style="color: #666; margin-top: 10px;">发现围绕核心议题精心编纂的文献合集</p>
+        </div>
+
+        <div class="collection-list" id="collectionList">
+            <div style="text-align: center; color: #888; padding: 40px;">正在加载专栏数据...</div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const res = await fetch('/api/collections');
+                const data = await res.json();
+                if (data.success) {
+                    renderCollections(data.collections, data.papersData);
+                }
+            } catch (err) {
+                document.getElementById('collectionList').innerHTML = '<div style="text-align: center; color: red;">读取数据失败</div>';
+            }
+        });
+
+        function renderCollections(collections, papersData) {
+            const list = document.getElementById('collectionList');
+            if (!collections || collections.length === 0) {
+                list.innerHTML = '<div style="text-align: center; color: #888;">暂无期刊合集。</div>';
+                return;
+            }
+
+            list.innerHTML = collections.map((c, i) => {
+                const papersHtml = c.paperIds.map(id => {
+                    const p = papersData.find(x => x.id === id);
+                    if (!p) return '';
+                    return `<a href="paper-view.html?id=${id}" class="paper-link">${p.title} <span>— ${p.authors}</span></a>`;
+                }).join('');
+
+                return `
+                <div class="collection-card">
+                    <div class="collection-img">Vol.${i + 1}</div>
+                    <div class="collection-content">
+                        <div class="collection-title">${c.title}</div>
+                        <div class="collection-desc">${c.description}</div>
+                        <div class="collection-papers">
+                            <h4>本辑收录文献</h4>
+                            ${papersHtml || '<p style="color:#aaa;font-size:0.9rem;">文献整理中...</p>'}
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+    </script>
+</body>
+
+</html>

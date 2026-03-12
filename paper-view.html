@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>文献阅读 | VSTOR Archive</title>
+    <link rel="stylesheet" href="css/academic-minimal.css">
+    <link rel="stylesheet" href="css/vstor-viewer.css"> <!-- 专门的阅读器样式 -->
+</head>
+
+<body class="viewer-body">
+
+    <!-- 顶部导航栏 -->
+    <nav class="v-navbar">
+        <div class="v-nav-container">
+            <div class="v-brand"><a href="vup-archive.html">VSTOR</a></div>
+            <div class="viewer-tools">
+                <button class="v-btn v-btn-outline btn-sm" onclick="alert('引用格式已复制到剪贴板')">Cite 引用</button>
+                <button class="v-btn v-btn-primary btn-sm" id="p-download-top">Download 下载 PDF</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 文献元数据区 (Metadata) -->
+    <header class="paper-header">
+        <div class="header-container">
+            <div class="journal-info">VSTOR DIGITAL ARCHIVE / OPEN ACCESS</div>
+            <h1 id="p-title" class="paper-display-title">正在加载文献标题...</h1>
+            <div id="p-authors" class="paper-display-authors">加载作者中...</div>
+            <div id="p-meta" class="paper-display-meta">加载出版信息...</div>
+        </div>
+    </header>
+
+    <!-- 核心阅读区 (PDF Viewer) -->
+    <main class="viewer-main">
+        <div class="viewer-container">
+            <!-- PDF 嵌入容器 -->
+            <div id="pdf-wrapper" class="pdf-frame-wrapper">
+                <iframe id="pdf-iframe" src="" type="application/pdf" width="100%" height="100%">
+                    <p>您的浏览器不支持 PDF 在线预览，请点击下载按钮阅读。</p>
+                </iframe>
+            </div>
+
+            <!-- 侧边栏：摘要与考据 -->
+            <aside class="viewer-sidebar">
+                <div class="sidebar-section">
+                    <h3>Abstract 摘要</h3>
+                    <p id="p-abstract">加载中...</p>
+                </div>
+                <!-- 官方声明，如果存在则显示 -->
+                <div id="p-official-statement" class="sidebar-section" style="display: none;">
+                    <h3>Official Statement 官方声明</h3>
+                    <p id="p-official-statement-content"></p>
+                </div>
+                <div class="sidebar-section">
+                    <h3>Keywords 关键词</h3>
+                    <p>野生学术, VUP行为学, DD数据分析</p>
+                </div>
+                <div class="sidebar-section">
+                    <h3>Navigation 导航</h3>
+                    <ul class="v-nav-links">
+                        <li><a href="vup-archive.html">探索文献</a></li>
+                        <li><a href="vstor-search.html">高级检索</a></li>
+                        <li><a href="vstor-collections.html">期刊专栏</a></li>
+                        <li><a href="vstor-metrics.html">学术指标</a></li>
+                        <li><a href="vstor-editorial.html">编委会</a></li>
+                        <li><a href="vstor-guidelines.html">作者须知</a></li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <script src="js/vstor-view-loader.js"></script>
+</body>
+
+</html>

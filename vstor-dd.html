@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>研究员控制台 | VSTOR</title>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap"
+		rel="stylesheet">
+	<!-- 复用主页的基础样式 + 控制台专属样式 -->
+	<link rel="stylesheet" href="../css/academic-minimal.css">
+	<link rel="stylesheet" href="../css/vstor-dashboard.css">
+</head>
+
+<body class="dashboard-body">
+
+	<!-- 登录后的导航栏 -->
+	<nav class="v-navbar">
+		<div class="v-nav-container">
+			<div class="v-brand"><a href="vup-archive.html">VSTOR</a></div>
+			<ul class="v-nav-links">
+				<li><a href="#">浏览论文</a></li>
+				<li><a href="#">我的书架</a></li>
+			</ul>
+
+			<!-- 右上角用户信息与下拉菜单 -->
+			<div class="v-user-menu" id="userMenu">
+				<button class="v-user-btn">
+					<span class="v-avatar">D</span> <!-- 这里会被JS自动改掉 -->
+					<span class="v-username">单推人小明</span> <!-- 这里会被JS自动改掉 -->
+					<span class="v-arrow">▼</span>
+				</button>
+				<!-- 下拉小框 -->
+				<div class="v-dropdown" id="userDropdown">
+					<div class="v-dropdown-header">
+						<span class="role-badge">独立研究员</span>
+					</div>
+					<a href="#" class="v-dropdown-item">账号与安全设置</a>
+					<a href="vstor-dd.html" class="v-dropdown-item active">进入操作平台</a>
+					<div class="v-dropdown-divider"></div>
+					<a href="vup-archive.html" class="v-dropdown-item text-red">退出登录</a>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<!-- 投稿弹窗 (Modal) -->
+	<div id="submitModal" class="modal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2 class="modal-title">提交新文献</h2>
+				<div class="modal-subtitle">Manuscript Submission System</div>
+			</div>
+
+			<form id="manuscriptForm">
+				<div class="modal-body">
+					<div class="submission-guidelines">
+						<strong>投稿须知：</strong>请确保您的研究符合《学术伦理与安全规范》，严禁涉及研究对象隐私。被指控存在学术不端的文章将被永久退稿。系统仅支持 PDF, DOC, DOCX
+						格式的原稿文件。
+					</div>
+
+					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+						<div class="form-group">
+							<label>学术论文标题 (Title)</label>
+							<input type="text" name="title" placeholder="例如：《基于弹幕流的情绪极性分析》" required>
+						</div>
+						<div class="form-group">
+							<label>对应研究对象 (VUP Name) <small style="color:var(--v-text-light);">可多选
+									(Ctrl/Cmd+点击)</small></label>
+							<div style="display: flex; gap: 8px;">
+								<select name="vup" id="submitVupSelect" multiple required
+									style="flex: 1; padding: 0.5rem; border: 1px solid var(--v-gray-border); border-radius: 4px; font-family: inherit; height: 80px;">
+									<option value="" disabled>载入中...</option>
+								</select>
+								<a href="vstor-vup-wiki.html" target="_blank" class="v-btn v-btn-outline"
+									style="display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 0.9rem; padding: 0 10px; height: 38px;">
+									➕ 新建词条
+								</a>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group" style="margin-top: 25px;">
+						<label>原稿文件 (Full Text) <span style="color:#d32f2f;">*必须为双栏排版</span></label>
+						<div class="file-drop-area" onclick="document.querySelector('input[name=\'file\']').click()">
+							<div class="file-drop-icon">📄</div>
+							<div class="file-drop-text">点击或拖拽上传学术论文正文</div>
+							<div class="file-drop-hint">支持 .pdf, .docx 格式，最大但不超过 50MB</div>
+							<input type="file" name="file" accept=".pdf,.doc,.docx" required style="display:none;"
+								onchange="this.parentElement.querySelector('.file-drop-text').innerHTML = '<span style=\'color:green\'>✅ ' + this.files[0].name + '</span>'">
+						</div>
+					</div>
+
+					<div class="form-group" style="margin-top: 25px;">
+						<label>附带封页图像 (Cover Image) <span style="color:#888; font-weight:normal;">[可选]</span></label>
+						<input type="file" name="cover" accept="image/*"
+							style="border: 2px dashed #ccc; padding: 10px; cursor: pointer; background: #fff;">
+						<small style="color: #666; display: block; margin-top: 5px;">若不上传，首页生成器将自动剥离 PDF
+							第一页作为文献缩略图。</small>
+					</div>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn-cancel"
+						onclick="document.getElementById('submitModal').style.display='none'">取消投稿</button>
+					<button type="submit" class="btn-submit">确认并提交初审</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- 控制台主体布局 -->
+	<div class="dashboard-layout">
+		<!-- 侧边栏 -->
+		<aside class="dashboard-sidebar">
+			<nav class="sidebar-nav">
+				<a href="#" class="sidebar-link active">研究概览</a>
+				<a href="#" class="sidebar-link">我的投稿 (My Submissions)</a>
+				<a href="vstor-peer-review.html" class="sidebar-link" id="peerReviewLink">同行评审 (Peer Review)</a>
+			</nav>
+		</aside>
+
+		<!-- 主内容区 -->
+		<main class="dashboard-main">
+			<h1 class="dash-title">研究员工作台</h1>
+			<p class="dash-subtitle">欢迎回来。您的野生学术之旅正在进行中。</p>
+
+			<!-- 个人学术档案概况卡片 -->
+			<section class="profile-card">
+				<div class="profile-header">
+					<h2 class="profile-title">研究概况 (Academic Profile)</h2>
+					<button class="v-btn v-btn-outline v-btn-sm" onclick="toggleProfileEdit()">
+						<span style="font-size: 0.9em;">✏️ 编辑档案</span>
+					</button>
+				</div>
+
+				<div class="profile-body">
+					<!-- 左侧展示区 -->
+					<div class="profile-display">
+						<div class="profile-avatar-large" id="profileDisplayAvatar">D</div>
+						<div class="profile-info">
+							<h3 class="profile-name" id="profileDisplayName">加载中...</h3>
+
+							<!-- 职称与经验条 -->
+							<div class="level-system-box" style="margin-top: 5px;">
+								<div
+									style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+									<span id="displayTitle"
+										style="font-weight: bold; font-size: 1.1rem; color: #1a237e;">见习单推人</span>
+									<span id="displayLevel"
+										style="font-weight:bold; font-size: 0.9rem; color: #666;">LV.1</span>
+								</div>
+								<div class="progress-bar-bg"
+									style="border-radius: 4px; overflow: hidden; background: #e0e0e0; height: 8px;">
+									<div id="levelProgress" class="progress-bar-fill"
+										style="width: 0%; background-color: #1a237e; height: 100%; transition: width 0.5s;">
+									</div>
+								</div>
+								<small style="color: #888; margin-top: 8px; display: block;">再投 <span
+										id="nextLevelCount">1</span> 篇论文即可晋升下一等级</small>
+							</div>
+
+							<!-- Bio 文字 -->
+							<div class="profile-bio" id="profileDisplayBio">
+								该学者尚未填写研究方向或学术简介...
+							</div>
+						</div>
+					</div>
+
+					<!-- 右侧编辑区 (默认隐藏) -->
+					<div class="profile-edit-panel" id="profileEditPanel" style="display: none;">
+						<h4 style="margin-top:0; color:#333; margin-bottom:15px; font-size: 1.05rem;">更新基础信息</h4>
+						<form id="profileForm">
+							<div class="form-group">
+								<label>学者简介 (Bio)</label>
+								<textarea id="bioInput" name="bio" style="height:90px;"
+									placeholder="写下你的研究方向或DD宣言..."></textarea>
+							</div>
+							<div class="form-group" style="margin-top: 15px;">
+								<label>更换学者头像</label>
+								<input type="file" name="avatar" accept="image/*" class="file-input-styled">
+							</div>
+							<div style="text-align: right; margin-top: 25px;">
+								<button type="button" class="btn-cancel" onclick="toggleProfileEdit()"
+									style="padding: 6px 15px; font-size: 0.9rem;">取消</button>
+								<button type="submit" class="btn-submit"
+									style="padding: 6px 15px; font-size: 0.9rem; margin-left: 10px;">保存修改</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</section>
+
+			<!-- 学术数据卡片 -->
+			<!-- 1. 修改统计数字部分 -->
+			<div class="dash-stats">
+				<div class="stat-card">
+					<div class="stat-num" id="stat-published">0</div> <!-- 加上 ID，初始设为 0 -->
+					<div class="stat-label">已发表论文</div>
+				</div>
+				<div class="stat-card">
+					<div class="stat-num">12</div>
+					<div class="stat-label">被引用次数 (DD-Index)</div>
+				</div>
+				<div class="stat-card">
+					<div class="stat-num" id="stat-pending">0</div> <!-- 加上 ID -->
+					<div class="stat-label">待评审同行文献</div>
+				</div>
+			</div>
+
+			<!-- 2. 修改表格部分 -->
+			<table class="academic-table">
+				<thead>
+					<tr>
+						<th>稿件编号</th>
+						<th>论文标题</th>
+						<th>研究对象 (VUP)</th>
+						<th>当前状态</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody id="manuscriptTableBody">
+					<!-- 这里清空！不要写死数据，让 JS 来生成 -->
+				</tbody>
+			</table>
+			<button class="v-btn v-btn-primary mt-20" id="openSubmitModal">提交新稿件 (Submit Manuscript)</button>
+		</main>
+	</div>
+	<!-- JS 控制脚本放入下面 -->
+	<!-- JS 控制脚本放入下面 -->
+	<script src="../js/vstor-dashboard.js"></script>
+	<script src="../js/vstor-level-system.js"></script>
+	<script src="js/vstor-bili-bridge.js"></script>
+
+	<script>
+		// 切换侧边编辑面板的显示状态
+		function toggleProfileEdit() {
+			const panel = document.getElementById('profileEditPanel');
+			if (panel.style.display === 'none' || panel.style.display === '') {
+				panel.style.display = 'block';
+			} else {
+				panel.style.display = 'none';
+			}
+		}
+	</script>
+</body>
+
+</html>

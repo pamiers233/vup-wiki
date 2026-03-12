@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>同行评审中心 | VSTOR</title>
+    <link rel="stylesheet" href="css/academic-minimal.css">
+    <link rel="stylesheet" href="css/vstor-dashboard.css">
+</head>
+<body class="dashboard-body">
+    <nav class="v-navbar">
+        <div class="v-nav-container">
+            <div class="v-brand"><a href="vup-archive.html">VSTOR</a></div>
+            <div class="text-muted">学术同行评审系统</div>
+        </div>
+    </nav>
+
+    <div class="dashboard-layout">
+        <main class="dashboard-main" style="flex:1;">
+            <h1 class="dash-title">同行评审广场</h1>
+            <p class="dash-subtitle">当前全站共有 <span id="peerReviewCount">0</span> 篇野生文献等待您的学术审阅。</p>
+
+            <div id="peerReviewList">
+                <!-- 正在评审的稿件会出现在这里 -->
+                <div class="v-loading-text">正在检索待评审稿件...</div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/vstor-peer-review.js"></script>
+</body>
+</html>

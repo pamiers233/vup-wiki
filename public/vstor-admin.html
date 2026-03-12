@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>VSTOR 编委会后台管理</title>
+    <link rel="stylesheet" href="css/academic-minimal.css">
+    <link rel="stylesheet" href="css/vstor-dashboard.css">
+    <style>
+        .admin-container { max-width: 1200px; margin: 50px auto; padding: 0 20px; }
+        .badge { padding: 4px 8px; font-size: 12px; }
+        .btn-sm { padding: 5px 10px; font-size: 12px; margin-right: 5px; }
+        .bg-green { background: #16a34a; color: white; }
+        .bg-red { background: #990000; color: white; }
+    </style>
+</head>
+<body>
+    <nav class="v-navbar">
+        <div class="v-nav-container">
+            <div class="v-brand">VSTOR ADMIN</div>
+            <div class="text-muted">编委会学术终审系统</div>
+        </div>
+    </nav>
+
+    <div class="admin-container">
+        <h1 class="dash-title">待评审稿件库</h1>
+        <p class="dash-subtitle">在这里审核来自全网研究员的野生学术成果。</p>
+
+        <table class="academic-table">
+            <thead>
+                <tr>
+                    <th>编号</th>
+                    <th>标题</th>
+                    <th>作者</th>
+                    <th>研究对象</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="adminTableBody">
+                <!-- 由 JS 渲染 -->
+            </tbody>
+        </table>
+    </div>
+
+    <script src="js/vstor-admin.js"></script>
+</body>
+</html>
